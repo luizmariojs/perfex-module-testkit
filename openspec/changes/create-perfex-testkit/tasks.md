@@ -40,15 +40,15 @@
 
 ## 6. CI e documentação (`reusable-ci-workflow`)
 
-- [ ] 6.1 Criar `.github/workflows/php-unit.yml` (`workflow_call`, inputs `php-versions` e `working-directory`, `setup-php`, cache do Composer, `fail-fast: false`). Verificar: `actionlint` (se disponível) ou execução real na tarefa 6.3
-- [ ] 6.2 Criar `.github/workflows/ci.yml` (`pull_request`, matriz 8.1–8.5) rodando o autoteste. Verificar: no PR desta change, as 5 verificações aparecem verdes
-- [ ] 6.3 Validar o workflow reutilizável de ponta a ponta: um job em `ci.yml` que chama `./.github/workflows/php-unit.yml` sobre o próprio kit. Verificar: job verde no PR
+- [x] 6.1 Criar `.github/workflows/php-unit.yml` (`workflow_call`, inputs `php-versions` e `working-directory`, `setup-php`, cache do Composer, `fail-fast: false`). Verificar: `actionlint` (se disponível) ou execução real na tarefa 6.3
+- [x] 6.2 Criar `.github/workflows/ci.yml` (`pull_request`, matriz 8.1–8.5) rodando o autoteste. Verificar: no PR desta change, as 5 verificações aparecem verdes
+- [x] 6.3 Validar o workflow reutilizável de ponta a ponta: um job em `ci.yml` que chama `./.github/workflows/php-unit.yml` sobre o próprio kit. Verificar: job verde no PR
 - [x] 6.4 Escrever o README: instalação (`repositories` vcs + `require-dev`), bootstrap mínimo, exemplo de teste de model, de webhook e de transporte HTTP, workflow de 5 linhas para o módulo, limitações (`curl_*`, `exit`/`die`, `header()`) e o padrão de injeção de transporte. Verificar: exemplos do README copiados para `tests/Docs/ReadmeExamplesTest.php` passam
 - [x] 6.5 Criar `CHANGELOG.md` com a entrada `0.1.0`. Verificar: arquivo no diff
 
 ## 7. Publicação
 
-- [ ] 7.1 Abrir o PR `feature/create-perfex-testkit` → `develop` (`Refs #N`) e mesclar com squash só com o CI verde. Verificar: PR mesclado
+- [x] 7.1 Abrir o PR `feature/create-perfex-testkit` → `develop` (`Refs #N`) e mesclar com squash só com o CI verde. Verificar: PR mesclado
 - [ ] 7.2 Abrir o PR `develop` → `main` (`Closes #N`), mesclar com merge, criar a tag `v0.1.0` e a tag móvel `v0` e fazer push. Verificar: `git ls-remote --tags origin` mostra `v0.1.0` e `v0`, e a issue está fechada
 - [ ] 7.3 Teste de consumo: num diretório temporário, um `composer.json` com `repositories` vcs do kit e `require-dev ^0.1`; `composer install` resolve `v0.1.0`. Verificar: `composer show luizmariojs/perfex-module-testkit` mostra 0.1.0
 - [ ] 7.4 Marcar como concluído o pré-requisito 1.2 da change `adopt-unit-test-suite` no `connect_asaas_nf`. Verificar: checkbox marcado

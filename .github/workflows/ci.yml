@@ -1,0 +1,16 @@
+# CI do próprio kit: roda o autoteste em todas as versões suportadas usando o workflow reutilizável
+# (valida o php-unit.yml de ponta a ponta a cada PR).
+name: CI
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  autoteste:
+    uses: ./.github/workflows/php-unit.yml
+    with:
+      php-versions: '["8.1", "8.2", "8.3", "8.4", "8.5"]'

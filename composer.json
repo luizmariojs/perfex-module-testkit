@@ -1,0 +1,31 @@
+{
+    "name": "luizmariojs/perfex-module-testkit",
+    "description": "Kit compartilhado de testes (PHPUnit + stubs Perfex CRM/CodeIgniter 3) para módulos do Perfex CRM",
+    "type": "library",
+    "license": "MIT",
+    "keywords": ["perfex", "perfex-crm", "codeigniter", "phpunit", "testing", "stubs"],
+    "authors": [
+        {"name": "Luiz Mário JS"}
+    ],
+    "require": {
+        "php": ">=8.1",
+        "phpunit/phpunit": "^10.5 || ^11.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "PerfexTestkit\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "PerfexTestkit\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "stable"
+}

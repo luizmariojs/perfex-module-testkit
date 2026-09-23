@@ -1,0 +1,72 @@
+# Workflow reutilizável: roda `composer test` do repositório chamador em matriz de versões do PHP.
+#
+# Uso num módulo (.github/workflows/tests.yml):
+#
+#   name: Testes
+#   on:
+#     pull_request:
+#       branches: [develop, main]
+#   jobs:
+#     phpunit:
+#       uses: luizmariojs/perfex-module-testkit/.github/workflows/php-unit.yml@v0
+#       with:
+#         php-versions: '["8.1", "8.3"]'
+#
+# O kit é público: nenhum secret é necessário, inclusive em repositórios chamadores privados.
+name: PHPUnit (reutilizável)
+
+on:
+  workflow_call:
+    inputs:
+      php-versions:
+        description: 'Versões do PHP em JSON, ex.: ["8.1", "8.3"]'
+        type: string
+        required: false
+        default: '["8.1"]'
+      working-directory:
+        description: Diretório com o composer.json (relativo à raiz do repositório)
+        type: string
+        required: false
+        default: '.'
+
+permissions:
+  contents: read
+
+jobs:
+  phpunit:
+    name: PHP ${{ matrix.php }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ${{ fromJSON(inputs.php-versions) }}
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+          tools: composer:v2
+
+      - name: Diretório de cache do Composer
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache do Composer
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: composer-${{ runner.os }}-php${{ matrix.php }}-${{ hashFiles(format('{0}/composer.json', inputs.working-directory)) }}
+          restore-keys: composer-${{ runner.os }}-php${{ matrix.php }}-
+
+      - name: composer install
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: composer test
+        run: composer test

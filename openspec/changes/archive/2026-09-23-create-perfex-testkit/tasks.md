@@ -49,6 +49,6 @@
 ## 7. Publicação
 
 - [x] 7.1 Abrir o PR `feature/create-perfex-testkit` → `develop` (`Refs #N`) e mesclar com squash só com o CI verde. Verificar: PR mesclado
-- [ ] 7.2 Abrir o PR `develop` → `main` (`Closes #N`), mesclar com merge, criar a tag `v0.1.0` e a tag móvel `v0` e fazer push. Verificar: `git ls-remote --tags origin` mostra `v0.1.0` e `v0`, e a issue está fechada
-- [ ] 7.3 Teste de consumo: num diretório temporário, um `composer.json` com `repositories` vcs do kit e `require-dev ^0.1`; `composer install` resolve `v0.1.0`. Verificar: `composer show luizmariojs/perfex-module-testkit` mostra 0.1.0
-- [ ] 7.4 Marcar como concluído o pré-requisito 1.2 da change `adopt-unit-test-suite` no `connect_asaas_nf`. Verificar: checkbox marcado
+- [x] 7.2 Abrir o PR `develop` → `main` (`Closes #N`), mesclar com merge, criar a tag `v0.1.0` e a tag móvel `v0` e fazer push. Verificar: `git ls-remote --tags origin` mostra `v0.1.0` e `v0`, e a issue está fechada
+- [x] 7.3 Teste de consumo: num diretório temporário, um `composer.json` com `repositories` vcs do kit e `require-dev ^0.1`; `composer install` resolve `v0.1.0`. Verificar: `composer show luizmariojs/perfex-module-testkit` mostra 0.1.0
+- [x] 7.4 Marcar como concluído o pré-requisito 1.2 da change `adopt-unit-test-suite` no `connect_asaas_nf`. Verificar: checkbox marcado

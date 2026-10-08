@@ -104,3 +104,69 @@ if (!class_exists('App_module_migration', false)) {
         }
     }
 }
+
+// -------------------------------------------------------------------------------------------------
+// Exceções lançadas por redirect(), show_404() e access_denied() (stubs/functions.php)
+// -------------------------------------------------------------------------------------------------
+
+if (!class_exists('TestRedirect', false)) {
+    /** redirect(): a mensagem é o destino. */
+    final class TestRedirect extends \RuntimeException
+    {
+    }
+}
+
+if (!class_exists('TestNotFound', false)) {
+    /** show_404(). */
+    final class TestNotFound extends \RuntimeException
+    {
+    }
+}
+
+if (!class_exists('TestAccessDenied', false)) {
+    /** access_denied(): a mensagem é a permissão. */
+    final class TestAccessDenied extends \RuntimeException
+    {
+    }
+}
+
+if (!class_exists('App_gateway', false)) {
+    /**
+     * Perfex: application/libraries/gateways/App_gateway.php, reduzido ao que os gateways dos módulos usam:
+     * configuração sem efeito e addPayment() registrado em Testkit::payments().
+     */
+    #[\AllowDynamicProperties]
+    class App_gateway
+    {
+        protected $ci;
+
+        public function __construct()
+        {
+            $this->ci = &get_instance();
+        }
+
+        public function setId($id)
+        {
+        }
+
+        public function setName($name)
+        {
+        }
+
+        public function setSettings($settings)
+        {
+        }
+
+        public function getSetting($name)
+        {
+            return '';
+        }
+
+        public function addPayment($data)
+        {
+            \PerfexTestkit\State::$payments[] = $data;
+
+            return true;
+        }
+    }
+}

@@ -21,9 +21,9 @@
 
 ## 3. Validação com os consumidores
 
-- [ ] 3.1 `connect_asaas_nf` apontando para a branch do kit: suíte de 425 testes verde sem os stubs locais (feito na
+- [x] 3.1 `connect_asaas_nf` apontando para a branch do kit: suíte de 425 testes verde sem os stubs locais (feito na
       mudança #225 daquele repositório). Verificar: `vendor/bin/phpunit` verde lá
-- [ ] 3.2 `connect_asaas` apontando para a branch do kit, sem `tests/stubs/App_gateway.php`: suíte verde. Verificar:
+- [x] 3.2 `connect_asaas` apontando para a branch do kit, sem `tests/stubs/App_gateway.php`: suíte verde. Verificar:
       `vendor/bin/phpunit` verde lá (sem commit no `connect_asaas`; a adoção fica para a refatoração dele)
 
 ## 4. Entrega

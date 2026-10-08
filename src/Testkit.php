@@ -120,6 +120,32 @@ final class Testkit
         State::$isAdmin     = false;
     }
 
+    /**
+     * Contato logado na área do cliente: id do cliente e permissões de contato (ex.: ['invoices']).
+     * false = ninguém logado.
+     *
+     * @param list<string> $permissions
+     */
+    public static function actingAsContact(int|false $clientId, array $permissions = []): void
+    {
+        State::$contact            = $clientId;
+        State::$contactPermissions = $permissions;
+    }
+
+    /** @return array<string, array<string, mixed>> itens registrados por add_theme_menu_item(), por slug */
+    public static function clientMenu(): array
+    {
+        return State::$clientMenu;
+    }
+
+    // --- campos personalizados ----------------------------------------------------------------------
+
+    /** Valor devolvido por get_custom_field_value($relId, $slug, ...). */
+    public static function customField(string $slug, int|string $relId, mixed $value): void
+    {
+        State::$customFields[$slug][$relId] = $value;
+    }
+
     // --- instância CI, dublês e banco ---------------------------------------------------------------
 
     public static function instance(): object
@@ -155,6 +181,12 @@ final class Testkit
     public static function alerts(): array
     {
         return State::$alerts;
+    }
+
+    /** @return list<array<string, mixed>> pagamentos recebidos por App_gateway::addPayment() */
+    public static function payments(): array
+    {
+        return State::$payments;
     }
 
     public static function hooks(): Hooks

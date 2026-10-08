@@ -261,3 +261,208 @@ if (!function_exists('set_alert')) {
         State::$alerts[] = ['type' => (string) $type, 'message' => (string) $message];
     }
 }
+
+// -------------------------------------------------------------------------------------------------
+// Navegação e erros: interrompem o fluxo com exceções do kit (stubs/classes.php), sem encerrar o PHPUnit
+// -------------------------------------------------------------------------------------------------
+
+if (!function_exists('redirect')) {
+    /** CodeIgniter: system/helpers/url_helper.php — lança TestRedirect com o destino. */
+    function redirect($uri = '', $method = 'auto', $code = null)
+    {
+        throw new TestRedirect((string) $uri);
+    }
+}
+
+if (!function_exists('show_404')) {
+    /** CodeIgniter: system/core/Common.php — lança TestNotFound. */
+    function show_404($page = '', $log_error = true)
+    {
+        throw new TestNotFound('404');
+    }
+}
+
+if (!function_exists('access_denied')) {
+    /** Perfex: application/helpers/admin_helper.php — lança TestAccessDenied com a permissão. */
+    function access_denied($permission = '')
+    {
+        throw new TestAccessDenied((string) $permission);
+    }
+}
+
+// -------------------------------------------------------------------------------------------------
+// Campos personalizados (Perfex: application/helpers/custom_fields_helper.php)
+// -------------------------------------------------------------------------------------------------
+
+if (!function_exists('get_custom_field_value')) {
+    /** Valor definido por Testkit::customField(); ausente ou nulo devolve string vazia. */
+    function get_custom_field_value($rel_id, $field_or_slug, $field_to, $format = true)
+    {
+        return State::$customFields[$field_or_slug][$rel_id] ?? '';
+    }
+}
+
+// -------------------------------------------------------------------------------------------------
+// Área do cliente (Perfex: application/helpers/clients_helper.php, themes_helper.php)
+// -------------------------------------------------------------------------------------------------
+
+if (!function_exists('is_client_logged_in')) {
+    /** Conforme Testkit::actingAsContact(). */
+    function is_client_logged_in()
+    {
+        return State::$contact !== false;
+    }
+}
+
+if (!function_exists('get_client_user_id')) {
+    /** Cliente do contato logado (false sem contato). */
+    function get_client_user_id()
+    {
+        return State::$contact;
+    }
+}
+
+if (!function_exists('has_contact_permission')) {
+    /** Permissões definidas em Testkit::actingAsContact(). */
+    function has_contact_permission($permission, $contact_id = '')
+    {
+        return in_array($permission, State::$contactPermissions, true);
+    }
+}
+
+if (!function_exists('redirect_after_login_to_current_url')) {
+    /** Perfex: guarda a URL na sessão — sem efeito nos testes. */
+    function redirect_after_login_to_current_url()
+    {
+    }
+}
+
+if (!function_exists('add_theme_menu_item')) {
+    /** Item consultável por Testkit::clientMenu(). */
+    function add_theme_menu_item($slug, $item)
+    {
+        State::$clientMenu[$slug] = $item;
+    }
+}
+
+// -------------------------------------------------------------------------------------------------
+// Registro do módulo (Perfex: application/helpers/modules_helper.php)
+// -------------------------------------------------------------------------------------------------
+
+if (!function_exists('register_activation_hook')) {
+    /** Sem efeito nos testes. */
+    function register_activation_hook($module, $function)
+    {
+    }
+}
+
+if (!function_exists('register_deactivation_hook')) {
+    /** Sem efeito nos testes. */
+    function register_deactivation_hook($module, $function)
+    {
+    }
+}
+
+if (!function_exists('register_staff_capabilities')) {
+    /** Acrescenta a permissão ao filtro staff_permissions, como o core. */
+    function register_staff_capabilities($feature_id, $config, $name = null)
+    {
+        hooks()->add_filter('staff_permissions', function ($permissions) use ($feature_id, $config, $name) {
+            $permissions[$feature_id] = array_merge(['name' => $name ?: $feature_id], $config);
+
+            return $permissions;
+        });
+    }
+}
+
+// -------------------------------------------------------------------------------------------------
+// Render de views — saída fixa, sem tema, sessão nem banco
+// -------------------------------------------------------------------------------------------------
+
+if (!function_exists('init_head')) {
+    /** Perfex: application/helpers/admin_helper.php — não imprime nada. */
+    function init_head($aside = true)
+    {
+    }
+}
+
+if (!function_exists('init_tail')) {
+    /** Perfex: application/helpers/admin_helper.php — não imprime nada. */
+    function init_tail()
+    {
+    }
+}
+
+if (!function_exists('html_escape')) {
+    /** CodeIgniter: system/core/Common.php — htmlspecialchars com ENT_QUOTES; não-string volta igual. */
+    function html_escape($var, $double_encode = true)
+    {
+        return is_string($var) ? htmlspecialchars($var, ENT_QUOTES, 'UTF-8', $double_encode) : $var;
+    }
+}
+
+if (!function_exists('e')) {
+    /** Perfex: application/helpers/general_helper.php — escapa para HTML. */
+    function e($var)
+    {
+        return htmlspecialchars((string) $var, ENT_QUOTES, 'UTF-8');
+    }
+}
+
+if (!function_exists('_dt')) {
+    /** Perfex: data e hora formatadas — no kit, o valor como veio. */
+    function _dt($date, $is_timesheet = false)
+    {
+        return (string) $date;
+    }
+}
+
+if (!function_exists('module_dir_url')) {
+    /** Perfex: application/helpers/modules_helper.php — /modules/<módulo>/<segmento>. */
+    function module_dir_url($module, $segment = '')
+    {
+        return '/modules/' . $module . '/' . ltrim((string) $segment, '/');
+    }
+}
+
+if (!function_exists('get_base_currency')) {
+    /** Perfex: moeda base — no kit, BRL (R$). */
+    function get_base_currency()
+    {
+        return (object) ['id' => 1, 'name' => 'BRL', 'symbol' => 'R$'];
+    }
+}
+
+if (!function_exists('format_invoice_status')) {
+    /** Perfex: application/helpers/invoices_helper.php — rótulo com o nome do status em pt-BR. */
+    function format_invoice_status($status, $classes = '', $label = true)
+    {
+        $names = [1 => 'Não pago', 2 => 'Pago', 3 => 'Parcialmente pago', 4 => 'Vencido', 5 => 'Cancelado', 6 => 'Rascunho'];
+
+        return '<span class="label invoice-status-' . (int) $status . '">' . ($names[(int) $status] ?? '') . '</span>';
+    }
+}
+
+if (!function_exists('form_open')) {
+    /** CodeIgniter: system/helpers/form_helper.php — formulário POST, sem CSRF. */
+    function form_open($action = '', $attributes = [], $hidden = [])
+    {
+        return '<form action="' . $action . '" method="post">';
+    }
+}
+
+if (!function_exists('form_close')) {
+    /** CodeIgniter: system/helpers/form_helper.php. */
+    function form_close($extra = '')
+    {
+        return '</form>' . $extra;
+    }
+}
+
+if (!function_exists('form_hidden')) {
+    /** CodeIgniter: system/helpers/form_helper.php — um campo oculto. */
+    function form_hidden($name, $value = '')
+    {
+        return '<input type="hidden" name="' . $name . '" value="' . $value . '">';
+    }
+}

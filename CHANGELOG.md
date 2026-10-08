@@ -3,6 +3,29 @@
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/); versões seguem
 [SemVer](https://semver.org/lang/pt-BR/). Em `0.x`, mudanças incompatíveis sobem o minor.
 
+## [0.2.0] - 2026-10-08
+
+Stubs absorvidos dos módulos consumidores (issue #5): o `connect_asaas_nf` mantinha 24 em `tests/bootstrap.php` (com
+estado em `$GLOBALS`) e o `connect_asaas` um `App_gateway` em `tests/stubs/`.
+
+### Adicionado
+- **Navegação e erros:** `redirect()`, `show_404()` e `access_denied()` lançam `TestRedirect` (mensagem = destino),
+  `TestNotFound` e `TestAccessDenied` (mensagem = permissão).
+- **Campos personalizados:** `get_custom_field_value()` + `Testkit::customField($slug, $relId, $valor)`.
+- **Área do cliente:** `is_client_logged_in()`, `get_client_user_id()`, `has_contact_permission()`,
+  `redirect_after_login_to_current_url()`, `add_theme_menu_item()` + `Testkit::actingAsContact()` e
+  `Testkit::clientMenu()`.
+- **Registro do módulo:** `register_activation_hook()`, `register_deactivation_hook()` (sem efeito) e
+  `register_staff_capabilities()` (filtro `staff_permissions`, como o core).
+- **Render de views:** `init_head`, `init_tail`, `html_escape`, `e`, `_dt`, `module_dir_url`, `get_base_currency`,
+  `format_invoice_status`, `form_open`, `form_close`, `form_hidden`, com saída fixa (ver README).
+- **Classe `App_gateway`** mínima; `addPayment()` registrado em `Testkit::payments()`.
+- Isolamento: campos personalizados, contato, menu do cliente e pagamentos zerados a cada teste.
+
+### Alterado (incompatível em 0.x)
+- Módulos que definiam esses stubs localmente passam a receber os do kit (carregados antes). Testes que gravavam em
+  `$GLOBALS['cf']`, `$GLOBALS['client_area']` ou `App_gateway::$payments` migram para as fachadas.
+
 ## [0.1.0] - 2026-09-23
 
 Primeira versão (Fase 0a do roteiro de testes dos módulos Perfex, issue #1).

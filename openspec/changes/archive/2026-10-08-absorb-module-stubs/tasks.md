@@ -28,5 +28,5 @@
 
 ## 4. Entrega
 
-- [ ] 4.1 Commit `Refs #5`, PR para `develop` (squash), CI verde
-- [ ] 4.2 PR `develop` → `main` (`Closes #5`), tag `v0.2.0`; mover `v0` só depois do 3.1 mesclado no NF
+- [x] 4.1 Commit `Refs #5`, PR para `develop` (squash), CI verde
+- [x] 4.2 PR `develop` → `main` (`Closes #5`), tag `v0.2.0`; mover `v0` só depois do 3.1 mesclado no NF

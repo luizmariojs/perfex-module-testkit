@@ -51,6 +51,21 @@ final class State
     /** @var array<string, list<string>> feature => capabilities */
     public static array $permissions = [];
 
+    /** @var array<string, array<int|string, mixed>> slug => [relid => valor] — get_custom_field_value() */
+    public static array $customFields = [];
+
+    /** Cliente do contato logado na área do cliente (false = nenhum). */
+    public static int|false $contact = false;
+
+    /** @var list<string> permissões do contato logado (has_contact_permission) */
+    public static array $contactPermissions = [];
+
+    /** @var array<string, array<string, mixed>> itens de add_theme_menu_item(), por slug */
+    public static array $clientMenu = [];
+
+    /** @var list<array<string, mixed>> pagamentos recebidos por App_gateway::addPayment() */
+    public static array $payments = [];
+
     /**
      * Violações detectadas pelo kit (consulta não programada, chamada HTTP inesperada...).
      * Registradas mesmo quando o código testado engole a exceção; PerfexTestCase falha o teste.
@@ -75,6 +90,12 @@ final class State
         self::$isAdmin     = false;
         self::$permissions = [];
         self::$violations  = [];
+
+        self::$customFields       = [];
+        self::$contact            = false;
+        self::$contactPermissions = [];
+        self::$clientMenu         = [];
+        self::$payments           = [];
     }
 
     /**

@@ -25,7 +25,7 @@ Nenhum código do Perfex CRM é distribuído aqui, apenas substitutos escritos p
 {
     "require-dev": {
         "phpunit/phpunit": "^10.5",
-        "luizmariojs/perfex-module-testkit": "^0.1"
+        "luizmariojs/perfex-module-testkit": "^0.2"
     },
     "repositories": [
         { "type": "vcs", "url": "https://github.com/luizmariojs/perfex-module-testkit" }
@@ -172,6 +172,9 @@ não com `require`/`include`.
 | `activity()` / `alerts()` / `hooks()` | Efeitos capturados |
 | `request($método, $headers, $corpo, $get, $post)` | Requisição simulada (corpo array vira JSON) |
 | `call(fn () => ...)` | Captura a saída e o código HTTP (200 se não definido) → `Response` (`status`, `body`, `json()`) |
+| `customField($slug, $relId, $valor)` | Valor de `get_custom_field_value($relId, $slug, ...)`; ausente ou nulo → `''` |
+| `actingAsContact($clienteId, ['invoices'])` / `clientMenu()` | Contato logado na área do cliente e itens de `add_theme_menu_item()` |
+| `payments()` | Pagamentos recebidos por `App_gateway::addPayment()` |
 
 ### Asserções de `PerfexTestCase`
 
@@ -190,6 +193,16 @@ não com `require`/`include`.
 | `format_invoice_number(123)` | `INV-000123` |
 | `_d('2026-09-23')` | `23/09/2026` |
 | `get_staff_user_id()` / `is_admin()` / `has_permission()` / `staff_can()` | Conforme `Testkit::actingAs()`; admin tem tudo |
+| `redirect($uri)` / `show_404()` / `access_denied($perm)` | Lançam `TestRedirect` (mensagem = destino), `TestNotFound` e `TestAccessDenied` (mensagem = permissão) |
+| `is_client_logged_in()` / `get_client_user_id()` / `has_contact_permission()` | Conforme `Testkit::actingAsContact()` |
+| `register_staff_capabilities($id, $config, $nome)` | Acrescenta ao filtro `staff_permissions`, como o core |
+| `register_activation_hook()` / `register_deactivation_hook()` / `redirect_after_login_to_current_url()` / `init_head()` / `init_tail()` | Sem efeito |
+| `html_escape($v)` / `e($v)` | `htmlspecialchars(..., ENT_QUOTES)`; `html_escape` devolve não-string igual |
+| `_dt('2026-10-08 18:00:00')` | O valor como veio |
+| `module_dir_url('m', 'assets/x.js')` | `/modules/m/assets/x.js` |
+| `get_base_currency()` | `{id: 1, name: BRL, symbol: R$}` |
+| `format_invoice_status(2)` | `<span class="label invoice-status-2">Pago</span>` (nomes em pt-BR) |
+| `form_open('/x')` / `form_close()` / `form_hidden('id', 3)` | `<form action="/x" method="post">` / `</form>` / `<input type="hidden" name="id" value="3">` |
 
 ### Banco falso
 
@@ -231,7 +244,7 @@ registrados: o `PerfexTestCase` **falha o teste** mesmo que o código do módulo
 | `curl_*` direto | Funções internas do PHP não podem ser substituídas | Padrão de **injeção de transporte** (abaixo) |
 | `exit` / `die` | Encerram o processo do PHPUnit | Em código novo, `return` após responder; em código legado, testar o que vem antes ou usar `#[RunInSeparateProcess]` |
 | `header()` | Sem efeito na CLI (`headers_list()` vazio) | Verificar o código HTTP (`http_response_code()`) e o corpo; isolar a montagem de headers numa função testável |
-| Lógica interna do Perfex | Cálculo de fatura, e-mails, custom fields completos não são reproduzidos | Dublês com `Testkit::double()` |
+| Lógica interna do Perfex | Cálculo de fatura, e-mails e formatação de custom fields não são reproduzidos | Dublês com `Testkit::double()`; valores de custom field com `Testkit::customField()` |
 | SQL real | O banco falso não interpreta SQL | Modo roteiro; consultas complexas em métodos pequenos de model; integração com MySQL real (camada L2) numa etapa futura |
 | Testes em paralelo | O estado do kit é global ao processo | Rodar o PHPUnit sequencialmente (padrão) |
 

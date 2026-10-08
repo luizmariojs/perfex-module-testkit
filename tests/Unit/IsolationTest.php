@@ -19,6 +19,11 @@ final class IsolationTest extends PerfexTestCase
         hooks()->add_action('evento', static fn () => null);
         Testkit::actingAs(7, ['x' => ['view']], true);
         get_instance()->algo = 'carregado';
+        Testkit::customField('customers_bairro', 1, 'Centro');
+        Testkit::actingAsContact(5, ['invoices']);
+        add_theme_menu_item('notas', ['name' => 'Notas']);
+        (new class () extends \App_gateway {
+        })->addPayment(['amount' => 1]);
 
         self::assertSame('sim', get_option('vaza'));
     }
@@ -34,5 +39,9 @@ final class IsolationTest extends PerfexTestCase
         self::assertFalse(get_staff_user_id());
         self::assertFalse(is_admin());
         self::assertFalse(isset(get_instance()->algo));
+        self::assertSame('', get_custom_field_value(1, 'customers_bairro', 'customers'));
+        self::assertFalse(is_client_logged_in());
+        self::assertSame([], Testkit::clientMenu());
+        self::assertSame([], Testkit::payments());
     }
 }
